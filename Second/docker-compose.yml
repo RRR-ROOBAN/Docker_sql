@@ -1,0 +1,28 @@
+version: '1.0'
+services:
+  db:
+    image: mysql:latest
+    container_name: sql_container
+    restart: always 
+    environment:
+       MYSQL_ROOT_PASSWORD: rootpassword
+       MYSQL_DATABASE: isidata
+       MYSQL_USER: roobanuser
+       MYSQL_PASSWORD: rootroot
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+  app:
+    build: ./sql_process
+    container_name: python_container
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=isidata
+      - DB_USER=roobanuser
+      - DB_PASSWORD=rootroot
+      - PORT=3306
+volumes: 
+  mysql_data:
